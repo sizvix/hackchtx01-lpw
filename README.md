@@ -14,10 +14,19 @@ Installer python 3.4 sur CentOS
 apt-get install python34
 ```
 
-Installer easy_install
+Installer setuptools
 
 Installer pip
 
 Installer jina2 (moteur de template)
 
 Installer Flask
+
+Installer MarkupSafe
+
+Installer Werkzeuq
+
+Installer itsdangerous
+
+Installer [wheel](http://pythonwheels.com/). Wheel est le nouveau standard pour diffuser les paquets en python. Il
+permet de remplacer les eggs. Le support des Wheels est supporté par pip >= 1.4 et setuptools >= 0.8
