@@ -45,9 +45,16 @@ def add_entry():
 
 @app.route('/session', methods=['GET'])
 def display_session():
-    return "<body>"+session['token']+"<br>" \
-               +str(session['user'])+"<br>" \
-               +str(pickle.loads(session['user']))+"</body>"
+    s = "<body>"
+    if session and session['token']:
+        s += session['token']+"<br>"
+    if session and session['user']:
+        s += str(session['user'])+"<br>"
+        s += str(pickle.loads(session['user']))+"<br>"
+    else:
+        s += "Not Logged"
+    s += "</body"
+    return s
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -55,28 +62,33 @@ def login():
     error = None
     if request.method == 'POST':
         url = 'http://localhost:8080/psdp/rest/auth/token'
-        payload = {'grant_type': 'password', 'client_id': 'd1f53029-9732-4d00-ba8e-0304020bef6b', 'client_secret': 'secret', 'username': 'demo@demo.com', 'password': 'demo'}
+        payload = {'grant_type': 'password',
+                   'client_id': app.config['CLIENT_ID'], # 'd1f53029-9732-4d00-ba8e-0304020bef6b',
+                   'client_secret': app.config['CLIENT_SECRET'], # 'secret',
+                   'username': request.form['username'],
+                   'password': request.form['password']}
         headers = {'content-type': 'application/x-www-form-urlencoded', 'Accept': 'application/json'}
         r = requests.post(url, data=urllib.urlencode(payload), headers=headers)
         print(r.status_code)
-        session['token'] = json.loads(r.text)['access_token']
-        user = User(session['token'])
-        session['user'] = pickle.dumps(user)
-
-        if request.form['username'] != app.config['USERNAME']:
-            error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
+        if r.status_code == 401:
             error = 'Invalid password'
-        else:
+        elif r.status_code == 200:
+            session['token'] = json.loads(r.text)['access_token']
+            user = User(session['token'])
+            session['user'] = pickle.dumps(user)
             session['logged_in'] = True
             flash('You were logged in')
             return redirect(url_for('show_entries'))
+        else:
+            error = 'Unkown error'
     return render_template('login.html', error=error)
 
 
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
+    session.pop('user', None)
+    session.pop('token', None)
     flash('You were logged out')
     return redirect(url_for('show_entries'))
 
