@@ -109,9 +109,9 @@ def add_entry():
 @app.route('/session', methods=['GET'])
 def display_session():
     s = "<body>"
-    if session and session['token']:
+    if session and 'token' in session:
         s += session['token']+"<br>"
-    if session and session['account']:
+    if session and 'account' in session:
         s += str(session['account'])+"<br>"
         s += str(pickle.loads(session['account']))+"<br>"
     else:
@@ -150,7 +150,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    session.pop('user', None)
+    session.pop('account', None)
     session.pop('token', None)
     flash('You were logged out')
     return redirect(url_for('show_entries'))
