@@ -1,18 +1,26 @@
 <!doctype html>
 <title>LPW</title>
-<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <div class=page>
-  <h1>La Partie Web</h1>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-6">
+        <h1>La Partie Web</h1>
+            </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-6">
   <div class=metanav>
   {% if not session.logged_in %}
-    <a href="{{ url_for('login') }}">log in</a>
+    <a class="btn btn-primary" href="{{ url_for('login') }}" role="button">log in</a>
   {% else %}
-    <a href="{{ url_for('logout') }}">log out</a>
+    <a class="btn btn-warning" href="{{ url_for('logout') }}" role="button">log out</a>
   {% endif %}
-    <a href="{{ url_for('display_session') }}">test_session</a>
+    <a class="btn btn-primary" href="{{ url_for('display_session') }}" role="button">session</a>
   </div>
   {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
   {% endfor %}
+        </div>
+    </div>
   {% block body %}{% endblock %}
 </div>
