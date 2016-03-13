@@ -91,11 +91,9 @@ class Account(object):
 
 @app.route('/')
 def show_entries():
-    entries=[
-        {"title": "titre1", "text": 'a'},
-        {"title": "titre2", "text": 'a'}
-    ]
-    return render_template('show_entries.html', entries=entries)
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return redirect(url_for('my_account'))
 
 
 @app.route('/add', methods=['POST'])
@@ -103,7 +101,7 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     flash('New entry was successfully posted')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('my_account'))
 
 
 @app.route('/session', methods=['GET'])
@@ -118,6 +116,14 @@ def display_session():
         s += "Not Logged"
     s += "</body"
     return s
+
+
+@app.route('/myaccount', methods=['GET'])
+def my_account():
+    if not session.get('logged_in'):
+        abort(401)
+    account = pickle.loads(session['account'])
+    return render_template('account.html', account=account)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -141,7 +147,7 @@ def login():
             session['account'] = pickle.dumps(account)
             session['logged_in'] = True
             flash('You were logged in')
-            return redirect(url_for('show_entries'))
+            return redirect(url_for('my_account'))
         else:
             error = 'Unkown error'
     return render_template('login.html', error=error)
@@ -153,7 +159,7 @@ def logout():
     session.pop('account', None)
     session.pop('token', None)
     flash('You were logged out')
-    return redirect(url_for('show_entries'))
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

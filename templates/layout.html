@@ -4,7 +4,7 @@
 <div class=page>
     <div class="row">
         <div class="col-md-6 col-md-offset-6">
-        <h1>La Partie Web</h1>
+        <h1>Welcome {{ account.email }} !</h1>
             </div>
     </div>
     <div class="row">
@@ -15,10 +15,10 @@
   {% else %}
     <a class="btn btn-warning" href="{{ url_for('logout') }}" role="button">log out</a>
   {% endif %}
-    <a class="btn btn-primary" href="{{ url_for('display_session') }}" role="button">session</a>
+    <a class="btn btn-primary" href="{{ url_for('my_account') }}" role="button">my account</a>
   </div>
   {% for message in get_flashed_messages() %}
-    <div class=flash>{{ message }}</div>
+    <!--<div class=flash>{{ message }}</div>-->
   {% endfor %}
         </div>
     </div>
