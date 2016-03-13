@@ -9,17 +9,14 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-6">
-  <div class=metanav>
+  <div class="metanav">
+    <a class="btn btn-primary" href="{{ url_for('my_account') }}" role="button">my account</a>
   {% if not session.logged_in %}
     <a class="btn btn-primary" href="{{ url_for('login') }}" role="button">log in</a>
   {% else %}
     <a class="btn btn-warning" href="{{ url_for('logout') }}" role="button">log out</a>
   {% endif %}
-    <a class="btn btn-primary" href="{{ url_for('my_account') }}" role="button">my account</a>
   </div>
-  {% for message in get_flashed_messages() %}
-    <!--<div class=flash>{{ message }}</div>-->
-  {% endfor %}
         </div>
     </div>
   {% block body %}{% endblock %}
